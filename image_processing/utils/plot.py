@@ -1,28 +1,26 @@
+from typing import Optional
+from PIL import Image
+import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_image(image):
-    plt.figure(figsize=(12, 4))
-    plt.imshow(image, cmap='gray')
-    plt.axis('off')
+def show(img: Image.Image, title: Optional[str] = None) -> None:
+    """Exibe a imagem com matplotlib."""
+    arr = np.asarray(img)
+    plt.figure()
+    plt.imshow(arr)
+    plt.axis("off")
+    if title:
+        plt.title(title)
     plt.show()
 
-def plot_result(*args):
-    number_images = len(args)
-    fig, axis = plt.subplots(nrows=1, ncols = number_images, figsize=(12, 4))
-    names_lst = ['Image {}'.format(i) for i in range(1, number_images)]
-    names_lst.append('Result')
-    for ax, name, image in zip(axis, names_lst, args):
-        ax.set_title(name)
-        ax.imshow(image, cmap='gray')
-        ax.axis('off')
-    fig.tight_layout()
-    plt.show()
-
-def plot_histogram(image):
-    fig, axis = plt.subplots(nrows=1, ncols = 3, figsize=(12, 4), sharex=True, sharey=True)
-    color_lst = ['red', 'green', 'blue']
-    for index, (ax, color) in enumerate(zip(axis, color_lst)):
-        ax.set_title('{} histogram'.format(color.title()))
-        ax.hist(image[:, :, index].ravel(), bins = 256, color = color, alpha = 0.8)
-    fig.tight_layout()
+def plot_histogram(img: Image.Image, title: str = "Histograma RGB") -> None:
+    """Plota histograma dos três canais RGB."""
+    arr = np.asarray(img)
+    plt.figure()
+    for i, lbl in enumerate(["R", "G", "B"]):
+        plt.hist(arr[..., i].ravel(), bins=256, alpha=0.5, label=lbl)
+    plt.legend()
+    plt.title(title)
+    plt.xlabel("Intensidade")
+    plt.ylabel("Frequência")
     plt.show()
